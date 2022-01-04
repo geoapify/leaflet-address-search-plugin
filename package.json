@@ -1,0 +1,44 @@
+{
+    "name": "@geoapify/leaflet-address-search-plugin",
+    "version": "1.0.0",
+    "description": "Address autocomplete plugin for Leaflet using Geoapify Geocoding API. Find an address and show its location!",
+    "homepage": "https://www.geoapify.com/geocoding-api/",
+    "main": "dist/L.Control.GeoapifyAddressSearch.min.js",
+    "files": [
+        "src",
+        "dist",
+        "examples"
+    ],
+    "license": "MIT",
+    "author": {
+        "name": "Geoapify GmbH",
+        "email": "info@geoapify.com",
+        "url": "https://www.geoapify.com/"
+    },
+    "peerDependencies": {
+        "leaflet": "*"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/geoapify/"
+    },
+    "keywords": [
+        "leaflet",
+        "geocoding",
+        "address",
+        "autocomplete",
+        "search",
+        "geoapify"
+    ],
+    "scripts": {
+        "build": "npm run build-js && npm run build-css",
+        "build-js": "uglifyjs src/L.Control.GeoapifyAddressSearch.js -o dist/L.Control.GeoapifyAddressSearch.min.js",
+        "build-css": "cleancss -o dist/L.Control.GeoapifyAddressSearch.min.css src/L.Control.GeoapifyAddressSearch.css",
+        "prepublish": "npm run build"
+    },
+    "devDependencies": {
+        "clean-css-cli": "^5.5.0",
+        "eslint": "^8.6.0",
+        "uglify-js": "^3.14.5"
+    }
+}

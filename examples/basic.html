@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Geoapify + Leaflet: Address Search Plugin</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="../src/L.Control.GeoapifyAddressSearch.css" />
+
+    <style>
+        html,
+        body,
+        #my-map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="my-map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="../src/L.Control.GeoapifyAddressSearch.js"></script>
+
+    <script>
+        // The Leaflet map Object
+        var map = L.map('my-map').setView([48.1500327, 11.5753989], 6);
+
+        // The API Key provided is restricted to the plugin demo
+        // Get your own API Key on https://myprojects.geoapify.com
+        var myAPIKey = "d797ff206eda4d1a804ab31d002f0f41";
+
+        // Retina displays require different mat tiles quality
+        var isRetina = L.Browser.retina;
+
+        var baseUrl = "https://maps.geoapify.com/v1/tile/osm-bright-smooth/{z}/{x}/{y}.png?apiKey={apiKey}";
+        var retinaUrl = "https://maps.geoapify.com/v1/tile/osm-bright-smooth/{z}/{x}/{y}@2x.png?apiKey={apiKey}";
+
+        // Add map tiles layer. Set 20 as the maximal zoom and provide map data attribution.
+        L.tileLayer(isRetina ? retinaUrl : baseUrl, {
+            attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" rel="nofollow" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" rel="nofollow" target="_blank">© OpenStreetMap</a> contributors',
+            apiKey: myAPIKey,
+            maxZoom: 20,
+            id: 'osm-bright',
+        }).addTo(map);
+
+        // Add Geoapify Address Search control
+        const addressSearchControl = L.control.addressSearch({position: 'topleft'});
+        map.addControl(addressSearchControl);
+    </script>
+</body>
+
+</html>
