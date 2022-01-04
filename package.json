@@ -20,10 +20,11 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/geoapify/"
+        "url": "https://github.com/geoapify/leaflet-address-search-plugin.git"
     },
     "keywords": [
         "leaflet",
+        "geocode",
         "geocoding",
         "address",
         "autocomplete",
@@ -40,5 +41,9 @@
         "clean-css-cli": "^5.5.0",
         "eslint": "^8.6.0",
         "uglify-js": "^3.14.5"
+    },
+    "bugs": {
+        "url": "https://github.com/geoapify/leaflet-address-search-plugin/issues",
+        "email": "info@geoapify.com"
     }
 }
