@@ -3,10 +3,10 @@
 
 <head lang="en">
   <meta charset="UTF-8">
-  <title>Geoapify + Leaflet: Address Search Plugin</title>
+  <title>Geoapify + Leaflet: Address Search Plugin - styling</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-  <link rel="stylesheet" href="./src/L.Control.GeoapifyAddressSearch.css" />
+  <link rel="stylesheet" href="../src/L.Control.GeoapifyAddressSearch.css" />
   <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.3.1/styles/a11y-light.min.css">
 
   <style>
@@ -51,59 +51,28 @@
 <body>
   <div class="header">
     <h1>Geoapify + Leaflet: Address Search Plugin Demo</h1>
-    <h3>Add an address autocomplete to a Leaflet map</h3>
-    <p>More examples: <a href="examples/styling.html">Custom styling</a>, <a href="examples/localization.html">Localize results</a>,
-      <a href="examples/user-location.html">Search nearby</a>, <a href="examples/icons.html">Beautiful markers</a>
+    <h3>Localize the address autocomplete to get results on your language</h3>
+    <p>More examples: <a href="../index.html">Add the address autocomplete plugin</a>, <a href="styling.html">Custom
+        style</a>,
+      <a href="user-location.html">Search nearby</a>, <a href="icons.html">Beautiful markers</a>
     </p>
   </div>
   <div class="demo-container">
     <div id="my-map"></div>
     <div class="code-container">
-      <p>This plugin uses <a href="https://www.geoapify.com/" target="_blank">Geoapify Location Platform</a> to search
-        addresses and suggests address completion.
-        You can read about the result addresses format on <a
-          href="https://apidocs.geoapify.com/docs/geocoding/address-autocomplete/" target="_blank">the documentation
-          page</a>.
-      </p>
-      <p>You'll need an API key to use Geoapify. Register now and get your key on <a
-          href="https://myprojects.geoapify.com/" target="_blank">myprojects.geoapify.com</a>. Free accounts permit up
-        to 3000 requests a day.</p>
-      <p>Here is a sample of how to add the Address Search Plugin to your Leaflet map:</p>
+      <p>You can localize the <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> Address Search control by
+        providing the "lang" parameter as an option.
+        In addition, it's possible to change the input field placeholder and "No results" record:</p>
+
       <pre><code class="language-js">
-var map = L.map('my-map').setView([48.1500327, 11.5753989], 6);
-var marker = null;
-
-var myAPIKey = "YOUR_API_KEY"; // Get an API Key on https://myprojects.geoapify.com
-var mapURL = L.Browser.retina
-  ? `https://maps.geoapify.com/v1/tile/{mapStyle}/{z}/{x}/{y}.png?apiKey={apiKey}`
-  : `https://maps.geoapify.com/v1/tile/{mapStyle}/{z}/{x}/{y}@2x.png?apiKey={apiKey}`;
-
-// Add map tiles layer. Set 20 as the maximal zoom and provide map data attribution.
-L.tileLayer(mapURL, {
-  attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" rel="nofollow" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" rel="nofollow" target="_blank">© OpenStreetMap</a> contributors',
-  apiKey: myAPIKey,
-  mapStyle: "osm-bright-smooth", // More map styles on https://apidocs.geoapify.com/docs/maps/map-tiles/
-  maxZoom: 20
-}).addTo(map);
-
-// Add Geoapify Address Search control
-const addressSearchControl = L.control.addressSearch(myAPIKey, {
+const addressSearchControl = L.control.addressSearch(myAPIKey /* get an API Key on https://myprojects.geoapify.com */, {
   position: 'topleft',
+  // translated with Google Translate. Sorry if wrong ))
+  placeholder: 'Ingrese una dirección aquí',
+  noResultsPlaceholder: "No se han encontrado resultados", 
+  lang: "es",
   resultCallback: (address) => {
-    if (marker) {
-      marker.remove();
-    }
-    
-    if (!address) {
-      return;
-    }
-
-    marker = L.marker([address.lat, address.lon]).addTo(map);
-    if (address.bbox && address.bbox.lat1 !== address.bbox.lat2 && address.bbox.lon1 !== address.bbox.lon2) {
-      map.fitBounds([[address.bbox.lat1, address.bbox.lon1], [address.bbox.lat2, address.bbox.lon2]], { padding: [100, 100] })
-    } else {
-      map.setView([address.lat, address.lon], 15);
-    }
+    ...
   },
   suggestionsCallback: (suggestions) => {
     console.log(suggestions);
@@ -112,11 +81,19 @@ const addressSearchControl = L.control.addressSearch(myAPIKey, {
 map.addControl(addressSearchControl);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
       </code></pre>
+      <h3>Supported languages</h3>
+      <p>ab, aa, af, ak, sq, am, ar, an, hy, as, av, ae, ay, az, bm, ba, eu, be, bn, bh, bi, bs, br, bg, my, ca, ch, ce,
+        ny, zh, cv, kw, co, cr, hr, cs, da, dv, nl, en, eo, et, ee, fo, fj, fi, fr, ff, gl, ka, de, el, gn, gu, ht, ha,
+        he, hz, hi, ho, hu, ia, id, ie, ga, ig, ik, io, is, it, iu, ja, jv, kl, kn, kr, ks, kk, km, ki, rw, ky, kv, kg,
+        ko, ku, kj, la, lb, lg, li, ln, lo, lt, lu, lv, gv, mk, mg, ms, ml, mt, mi, mr, mh, mn, na, nv, nb, nd, ne, ng,
+        nn, no, ii, nr, oc, oj, cu, om, or, os, pa, pi, fa, pl, ps, pt, qu, rm, rn, ro, ru, sa, sc, sd, se, sm, sg, sr,
+        gd, sn, si, sk, sl, so, st, es, su, sw, ss, sv, ta, te, tg, th, ti, bo, tk, tl, tn, to, tr, ts, tt, tw, ty, ug,
+        uk, ur, uz, ve, vi, vo, wa, cy, wo, fy, xh, yi, yo, za</p>
     </div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="./src/L.Control.GeoapifyAddressSearch.js"></script>
+  <script src="../src/L.Control.GeoapifyAddressSearch.js"></script>
   <script src="https://unpkg.com/@highlightjs/cdn-assets@11.3.1/highlight.min.js"></script>
 
 
@@ -124,7 +101,7 @@ L.control.zoom({ position: 'bottomright' }).addTo(map);
 
   <script>
     // The Leaflet map Object
-    var map = L.map('my-map', { zoomControl: false }).setView([48.1500327, 11.5753989], 6);
+    var map = L.map('my-map', { zoomControl: false }).setView([48.1500327, 11.5753989], 5);
 
     // The API Key provided is restricted to the plugin demo
     // Get your own API Key on https://myprojects.geoapify.com
@@ -137,7 +114,7 @@ L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.tileLayer(mapURL, {
       attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" rel="nofollow" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" rel="nofollow" target="_blank">© OpenStreetMap</a> contributors',
       apiKey: myAPIKey,
-      mapStyle: "osm-bright-smooth", // More map styles on https://apidocs.geoapify.com/docs/maps/map-tiles/
+      mapStyle: "klokantech-basic", // More map styles on https://apidocs.geoapify.com/docs/maps/map-tiles/
       maxZoom: 20
     }).addTo(map);
 
@@ -147,6 +124,9 @@ L.control.zoom({ position: 'bottomright' }).addTo(map);
     // Get your own API Key on https://myprojects.geoapify.com
     const addressSearchControl = L.control.addressSearch(myAPIKey, {
       position: 'topleft',
+      placeholder: 'Ingrese una dirección aquí', // translated with Google Translate ))
+      noResultsPlaceholder: "No se han encontrado resultados",
+      lang: "es",
       resultCallback: (address) => {
         if (marker) {
           marker.remove();
@@ -154,8 +134,8 @@ L.control.zoom({ position: 'bottomright' }).addTo(map);
 
         if (!address) {
           return;
-        } 
-
+        }
+        
         marker = L.marker([address.lat, address.lon]).addTo(map);
         if (address.bbox && address.bbox.lat1 !== address.bbox.lat2 && address.bbox.lon1 !== address.bbox.lon2) {
           map.fitBounds([[address.bbox.lat1, address.bbox.lon1], [address.bbox.lat2, address.bbox.lon2]], { padding: [100, 100] })

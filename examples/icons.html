@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Geoapify + Leaflet: Address Search Plugin - styling</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="../src/L.Control.GeoapifyAddressSearch.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.3.1/styles/a11y-light.min.css">
+
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      height: 155px;
+      padding: 0 20px;
+    }
+
+    .demo-container {
+      flex: 1;
+      max-height: calc(100% - 155px);
+      display: flex;
+      flex-direction: row;
+    }
+
+    #my-map {
+      flex: 1;
+    }
+
+    .code-container {
+      padding: 10px;
+      min-width: 600px;
+      max-width: 600px;
+
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>Geoapify + Leaflet: Address Search Plugin Demo</h1>
+    <h3>Show locations with beautiful markers</h3>
+    <p>More examples: <a href="../index.html">Add the address autocomplete plugin</a>,
+      <a href="styling.html">Custom style</a>,
+      <a href="localization.html">Localize results</a>,
+      <a href="user-location.html">Search nearby</a>
+    </p>
+  </div>
+  <div class="demo-container">
+    <div id="my-map"></div>
+    <div class="code-container">
+      <p>The <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> Address Autocomplete plugin notifies when new addresses are suggested and when an address has been selected. 
+        So, you can visualize the suggestions and results on a map.</p>
+      <p>Make your maps more attractive by using <a href="https://apidocs.geoapify.com/playground/icon/" target="_blank">the Marker Icon API</a> by generating a set of customizable markers for your maps:</p>
+      <pre><code class="language-js">
+var marker = null;
+var suggestionMarkers = [];
+const suggestionsMarkerIcon = L.icon({
+  iconUrl: `https://api.geoapify.com/v1/icon/?type=awesome&shadowColor=%23fafafa&color=%23fff351&size=small&scaleFactor=2&apiKey=${myAPIKey}` /* get an API Key on https://myprojects.geoapify.com */,
+  iconSize: [25, 37], // size of the icon
+  iconAnchor: [12.5, 34], // the point on the icon which will correspond to the marker's location, substruct the shadow
+  popupAnchor: [0, -36] // the point from which the popup should open relative to the iconAnchor
+});
+
+const resultMarkerIcon = L.icon({
+  iconUrl: `https://api.geoapify.com/v1/icon/?type=awesome&shadowColor=%23fafafa&color=%2336d867&scaleFactor=2&apiKey=${myAPIKey}` /* get an API Key on https://myprojects.geoapify.com */,
+  iconSize: [31, 46],
+  iconAnchor: [15.5, 42],
+  popupAnchor: [0, -45] 
+});      
+
+const addressSearchControl = L.control.addressSearch(myAPIKey /* get an API Key on https://myprojects.geoapify.com */, {
+  position: 'topleft',
+  resultCallback: (address) => {
+    if (marker) {
+      marker.remove();
+    }
+
+    if (suggestionMarkers) {
+      suggestionMarkers.forEach(marker => marker.remove());
+      suggestionMarkers = [];
+    }
+
+    if (!address) {
+      return;
+    }
+
+    marker = L.marker([address.lat, address.lon], {icon: resultMarkerIcon}).addTo(map);
+    if (address.bbox && address.bbox.lat1 !== address.bbox.lat2 && address.bbox.lon1 !== address.bbox.lon2) {
+      map.fitBounds([[address.bbox.lat1, address.bbox.lon1], [address.bbox.lat2, address.bbox.lon2]], { padding: [100, 100] })
+    } else {
+      map.setView([address.lat, address.lon], 15);
+    }
+  },
+  suggestionsCallback: (suggestions) => {
+    if (marker) {
+      marker.remove();
+    }
+
+    if (suggestionMarkers) {
+      suggestionMarkers.forEach(marker => marker.remove());
+      suggestionMarkers = [];
+    }
+
+    if (!suggestions || !suggestions.length) {
+      return;
+    }
+
+    const bbox = L.latLngBounds();
+    suggestions.forEach(suggestion => {
+      bbox.extend([suggestion.lat, suggestion.lon]);
+      suggestionMarkers.push(L.marker([suggestion.lat, suggestion.lon], {icon: suggestionsMarkerIcon}).bindPopup(suggestion.formatted).addTo(map));
+    });
+
+    if (bbox.isValid) {
+      map.fitBounds(bbox, { padding: [100, 100] })
+    } else {
+      map.setView([suggestions[0].lat, suggestions[0].lon], 15);
+    }
+  }
+});
+map.addControl(addressSearchControl);
+L.control.zoom({ position: 'bottomright' }).addTo(map);
+      </code></pre>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="../src/L.Control.GeoapifyAddressSearch.js"></script>
+  <script src="https://unpkg.com/@highlightjs/cdn-assets@11.3.1/highlight.min.js"></script>
+
+
+  <script>hljs.highlightAll();</script>
+
+  <script>
+    // The Leaflet map Object
+    var map = L.map('my-map', { zoomControl: false }).setView([48.1500327, 11.5753989], 5);
+
+    // The API Key provided is restricted to the plugin demo
+    // Get your own API Key on https://myprojects.geoapify.com
+    var myAPIKey = "d797ff206eda4d1a804ab31d002f0f41";
+    var mapURL = L.Browser.retina
+      ? `https://maps.geoapify.com/v1/tile/{mapStyle}/{z}/{x}/{y}.png?apiKey={apiKey}`
+      : `https://maps.geoapify.com/v1/tile/{mapStyle}/{z}/{x}/{y}@2x.png?apiKey={apiKey}`;
+
+    // Add map tiles layer. Set 20 as the maximal zoom and provide map data attribution.
+    L.tileLayer(mapURL, {
+      attribution: 'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" rel="nofollow" target="_blank">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" rel="nofollow" target="_blank">© OpenStreetMap</a> contributors',
+      apiKey: myAPIKey,
+      mapStyle: "dark-matter-brown", // More map styles on https://apidocs.geoapify.com/docs/maps/map-tiles/
+      maxZoom: 20
+    }).addTo(map);
+
+    var marker = null;
+    var suggestionMarkers = [];
+
+    const suggestionsMarkerIcon = L.icon({
+      iconUrl: `https://api.geoapify.com/v1/icon/?type=awesome&shadowColor=%23fafafa&color=%23fff351&size=small&scaleFactor=2&apiKey=${myAPIKey}`,
+      iconSize: [25, 37], // size of the icon
+      iconAnchor: [12.5, 34], // the point on the icon which will correspond to the marker's location, substruct the shadow
+      popupAnchor: [0, -36] // the point from which the popup should open relative to the iconAnchor
+    });
+
+    const resultMarkerIcon = L.icon({
+      iconUrl: `https://api.geoapify.com/v1/icon/?type=awesome&shadowColor=%23fafafa&color=%2336d867&scaleFactor=2&apiKey=${myAPIKey}`,
+      iconSize: [31, 46],
+      iconAnchor: [15.5, 42],
+      popupAnchor: [0, -45] 
+    });
+
+    // Add Geoapify Address Search control
+    // Get your own API Key on https://myprojects.geoapify.com
+    const addressSearchControl = L.control.addressSearch(myAPIKey, {
+      position: 'topleft',
+      resultCallback: (address) => {
+        if (marker) {
+          marker.remove();
+        }
+
+        if (suggestionMarkers) {
+          suggestionMarkers.forEach(marker => marker.remove());
+          suggestionMarkers = [];
+        }
+
+        if (!address) {
+          return;
+        }
+
+        marker = L.marker([address.lat, address.lon], {icon: resultMarkerIcon}).addTo(map);
+        if (address.bbox && address.bbox.lat1 !== address.bbox.lat2 && address.bbox.lon1 !== address.bbox.lon2) {
+          map.fitBounds([[address.bbox.lat1, address.bbox.lon1], [address.bbox.lat2, address.bbox.lon2]], { padding: [100, 100] })
+        } else {
+          map.setView([address.lat, address.lon], 15);
+        }
+      },
+      suggestionsCallback: (suggestions) => {
+        if (marker) {
+          marker.remove();
+        }
+
+        if (suggestionMarkers) {
+          suggestionMarkers.forEach(marker => marker.remove());
+          suggestionMarkers = [];
+        }
+
+        if (!suggestions || !suggestions.length) {
+          return;
+        }
+
+        const bbox = L.latLngBounds();
+        suggestions.forEach(suggestion => {
+          bbox.extend([suggestion.lat, suggestion.lon]);
+          suggestionMarkers.push(L.marker([suggestion.lat, suggestion.lon], {icon: suggestionsMarkerIcon}).bindPopup(suggestion.formatted).addTo(map));
+        });
+
+        if (bbox.isValid) {
+          map.fitBounds(bbox, { padding: [100, 100] })
+        } else {
+          map.setView([suggestions[0].lat, suggestions[0].lon], 15);
+        }
+      }
+    });
+    map.addControl(addressSearchControl);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+  </script>
+</body>
+
+</html>
