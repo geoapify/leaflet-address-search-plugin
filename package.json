@@ -35,7 +35,7 @@
         "build": "npm run build-js && npm run build-css",
         "build-js": "uglifyjs src/L.Control.GeoapifyAddressSearch.js -o dist/L.Control.GeoapifyAddressSearch.min.js",
         "build-css": "cleancss -o dist/L.Control.GeoapifyAddressSearch.min.css src/L.Control.GeoapifyAddressSearch.css",
-        "prepublish": "npm run build"
+        "prepare": "npm run build"
     },
     "devDependencies": {
         "clean-css-cli": "^5.5.0",
