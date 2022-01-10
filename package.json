@@ -1,6 +1,6 @@
 {
     "name": "@geoapify/leaflet-address-search-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Address autocomplete plugin for Leaflet using Geoapify Geocoding API. Find an address and show its location!",
     "homepage": "https://www.geoapify.com/geocoding-api/",
     "main": "dist/L.Control.GeoapifyAddressSearch.min.js",

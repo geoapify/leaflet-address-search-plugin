@@ -101,7 +101,7 @@ Here are search options supported by the Address Search Plugin:
 | lang | *ISO 2 Letter Language Code* | 'en' | Result language, see the supported languages list on [the Localization Demo](https://geoapify.github.io/leaflet-address-search-plugin/examples/localization.html) |
 | mapViewBias | *boolean* | false | Add a bias to the map view to search addresses nearby first |
 | resultCallback | *(address) => {}* | `undefined` | Callback to notify when a user has selected an address |
-| suggestionsCallback | *(addresses: []) => {}* | `undefined` | Callback to notify when new suggestions has been obtained for the entered text |
+| suggestionsCallback | *(addresses: []) => {}* | `undefined` | Callback to notify when new suggestions have been obtained for the entered text |
 
 ### Address data structure
 The Address Search plugin returns addresses in the Geoapify format. For more information, see [the documentation page](https://apidocs.geoapify.com/docs/geocoding/address-autocomplete/).
