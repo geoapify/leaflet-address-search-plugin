@@ -267,6 +267,8 @@
             if (!this._input.value) {
                 this._currentItems = null;
             }
+
+            this._map.dragging.enable();
         },
         _click: function (event) {
             if (!this._autocompleteItemsElement && !this._noResultsElement) {
