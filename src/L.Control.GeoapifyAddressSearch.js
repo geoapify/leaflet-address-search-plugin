@@ -51,6 +51,12 @@
             L.DomEvent.addListener(input, 'click', this._click, this);
             L.DomEvent.addListener(input, 'down', this._click, this);
 
+            L.DomEvent.on(input, 'focus', (ev) => {
+                L.DomEvent.stopPropagation(ev);
+            });
+
+            L.DomEvent.disableClickPropagation(input);
+
             L.DomEvent.addListener(input, 'dblclick', L.DomEvent.stopPropagation);
 
             L.DomEvent.addListener(container, 'mouseover', () => {
